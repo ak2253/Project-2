@@ -1,11 +1,12 @@
 import java.util.HashSet;
 
-class Graph {
+public class Graph {
 	public HashSet<Node> Set=new HashSet<Node>();
 	public void addNode(final String nodeVal) { //add node to Set
 		Node node=new Node(nodeVal);
 		Set.add(node);
 	}
+	
 	public void addUndirectedEdge(final Node first, final Node second) { //create edge from node first to node second both ways
 		if(!Set.isEmpty()) { //check for empty set
 			if(Set.contains(first)&&Set.contains(second)) { //check if both nodes exists
@@ -22,6 +23,7 @@ class Graph {
 			}
 		}
 	}
+	
 	public void removeUndirectedEdge(final Node first, final Node second) { //delete edge from node first to node second both ways
 		if(!Set.isEmpty()) { //check for empty set
 			if(Set.contains(first)&&Set.contains(second)) { //check if both nodes exist
@@ -40,6 +42,7 @@ class Graph {
 			}
 		}
 	}
+	
 	public HashSet<Node> getAllNodes() { //returns Set
 		return Set;
 	}
