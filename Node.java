@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 class Node {
 	String value;
 	boolean visited;
 	List<Node> elst;
+	HashMap<Node,Integer> wEdge=new HashMap<Node,Integer>(); //for dijkstras
+	int indegree=0; //for topological sorting
 	Node(String value) {
 		this.value=value;
 		elst=new ArrayList<Node>();
