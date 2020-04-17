@@ -17,7 +17,7 @@ public class GraphSearch {
 			arlst.add(node);
 			if(node==end) //base case
 				return true;
-			for(Node edge:node.elst) {
+			for(Node edge:node.nodeSet) {
 				if(DFSRecHelper(edge,end,arlst)==true) //check if current path is solution
 					return true;
 			}
@@ -37,7 +37,7 @@ public class GraphSearch {
 				arlst.add(curnode);
 				if(curnode==end) //base case
 					return arlst;
-				for(Node edge:curnode.elst) { //traverse through edges
+				for(Node edge:curnode.nodeSet) { //traverse through edges
 					st.push(edge);
 				}
 			}
@@ -48,7 +48,7 @@ public class GraphSearch {
 	public ArrayList<Node> BFTRec(final Graph graph) { //create BFT of graph
 		ArrayList<Node> arlst=new ArrayList<Node>();
 		Queue<Node> q=new LinkedList<Node>();
-		for(Node node:graph.Set) { //check for nodes with no edges
+		for(Node node:graph.nodeSet) { //check for nodes with no edges
 			q.add(node);
 			BFTRecHelper(q,arlst);
 		}
@@ -61,7 +61,7 @@ public class GraphSearch {
 			if(curnode.isVisited()==false) { //check if visited
 				curnode.visited=true;
 				arlst.add(curnode);
-				for(Node edge:curnode.elst) { //add edges to queue
+				for(Node edge:curnode.nodeSet) { //add edges to queue
 					q.add(edge);
 				}
 			}
@@ -73,7 +73,7 @@ public class GraphSearch {
 		ArrayList<Node> arlst=new ArrayList<Node>();
 		Graph tempgraph=graph;
 		Queue<Node> q=new LinkedList<Node>();
-		for(Node node:tempgraph.Set) { //check for nodes with no edges
+		for(Node node:tempgraph.nodeSet) { //check for nodes with no edges
 			if(node.isVisited()==false)
 				q.add(node);
 			while(!q.isEmpty()) {
@@ -81,7 +81,7 @@ public class GraphSearch {
 				if(curnode.isVisited()==false) { //check if visited
 					curnode.visited=true;
 					arlst.add(curnode);
-					for(Node edge:curnode.elst) //add edges to queue
+					for(Node edge:curnode.nodeSet) //add edges to queue
 						q.add(edge);
 				}
 			}
