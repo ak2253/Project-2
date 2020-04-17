@@ -11,7 +11,7 @@ public class TopSort {
 		ArrayList<Node> arlst=new ArrayList<Node>();
 		HashMap<Node,Integer> Hmap=new HashMap<Node,Integer>();
 		Queue<Node> q=new LinkedList<Node>();
-		for(Node node:graph.Set) //inserting each node indegree
+		for(Node node:graph.DGnodeSet) //inserting each node indegree
 			Hmap.put(node, node.indegree);
 		Iterator<Entry<Node, Integer>> iter=Hmap.entrySet().iterator();
 		while(iter.hasNext()) { //put all nodes with 0 indegree into queue
@@ -23,7 +23,7 @@ public class TopSort {
 			Node node=q.poll();
 			arlst.add(node);
 			Hmap.replace(node,-1); //mark as visited
-			for(Node edge:node.elst) { //decrement indegree for depended nodes
+			for(Node edge:node.nodeSet) { //decrement indegree for depended nodes
 				Hmap.replace(edge, Hmap.get(edge)-1);
 				if(Hmap.get(edge)==0) { //if not longer dependant add to queue
 					q.add(edge);
@@ -36,18 +36,18 @@ public class TopSort {
 	public ArrayList<Node> mDFS(final DirectedGraph graph) { //traverse through graph using mdfs
 		ArrayList<Node> arlst=new ArrayList<Node>();
 		Stack<Node> order=new Stack<Node>();
-		Stack<Node> s=new Stack <Node>();
-		for(Node node:graph.Set) { //Go through all nodes to check for disconnected graph
+		Stack<Node> stack=new Stack <Node>();
+		for(Node node:graph.DGnodeSet) { //Go through all nodes to check for disconnected graph
 			if(node.visited==false) { //add to stack if not visited
 				node.visited=true;
-				s.push(node);
+				stack.push(node);
 			}
-			while(!s.isEmpty()) { //Go through all nodes connected to the respective node
-				Node curnode=s.pop();
-				for(Node edge:curnode.elst) {
+			while(!stack.isEmpty()) { //Go through all nodes connected to the respective node
+				Node curnode=stack.pop();
+				for(Node edge:curnode.nodeSet) {
 					if(edge.visited==false) {
 						edge.visited=true;
-						s.push(edge);
+						stack.push(edge);
 					}
 				}
 				order.push(curnode);
@@ -55,9 +55,9 @@ public class TopSort {
 		}
 		//order is backwards so the stack needs to reverse itself
 		while(!order.isEmpty())
-			s.push(order.pop());
-		while(!s.isEmpty())
-			arlst.add(s.pop());
+			stack.push(order.pop());
+		while(!stack.isEmpty())
+			arlst.add(stack.pop());
 		return arlst;
 	}
 }
