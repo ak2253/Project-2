@@ -1,22 +1,20 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 
 class Node {
 	String value;
 	boolean visited;
-	List<Node> elst;
+	HashSet<Node> nodeSet=new HashSet<Node>();
 	HashMap<Node,Integer> wEdge=new HashMap<Node,Integer>(); //for dijkstras
 	int indegree=0; //for topological sorting
 	Node(String value) {
 		this.value=value;
-		elst=new ArrayList<Node>();
 		visited=false;
 	}
-	public boolean isVisited() { //return visited
+	public boolean isVisited() {
 		return visited;
 	}
-	public List<Node> getEdges() { //return list of edges
-		return elst;
+	public HashSet<Node> getEdges() {
+		return nodeSet;
 	}
 }
