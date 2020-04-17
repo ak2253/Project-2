@@ -1,27 +1,25 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
 
 public class MainGraph {
 	// problem 3
-	public static Graph createRandomUnweightedGraphIter(int n) { //create random Graph
+	public static Graph createRandomUnweightedGraphIter(int n) {
 		Graph graph=new Graph();
 		Random rand=new Random();
 		int tempn=n;
 		while(tempn>0) {
 			graph.addNode(String.valueOf(tempn));
-			if(graph.Set.size()>1) { //check if there only 0 or 1 node in graph
+			if(graph.nodeSet.size()>1) { //check if there only 0 or 1 node in graph
 				Node ognode=null;
-				for(Node node:graph.Set) { //find node that was just added
+				for(Node node:graph.nodeSet) { //find node that was just added
 					if(node.value.compareTo(String.valueOf(tempn))==0)
 							ognode=node;
 				}
-				for(Node node:graph.Set) { //go though all current nodes to potentially add an edge 
+				for(Node node:graph.nodeSet) { //go though all current nodes to potentially add an edge 
 					if(node.value.compareTo(String.valueOf(tempn))!=0) {
 						int randnum=rand.nextInt(2);
 						if(randnum==0) //50/50 to add edge
@@ -33,21 +31,16 @@ public class MainGraph {
 		}
 		return graph;
 	}
-	
 	public static Graph createLinkedList(int n) { //create graph that looks like SLL
 		Graph graph=new Graph();
-		Node tempnode=null; //previous node
-		int tempn=n;
-		while(tempn>0) {
-			Node node=new Node(String.valueOf(tempn));
-			if(tempnode!=null) { //check for first iteration
-				tempnode.elst.add(node);
-				graph.Set.add(tempnode);
-			}
+		Node tempnode=new Node("1"); //previous node
+		for(int i=2;i<=n;i++) {
+			Node node=new Node(String.valueOf(i));
+			tempnode.nodeSet.add(node);
+			graph.nodeSet.add(tempnode);
 			tempnode=node;
-			tempn-=1;
 		}
-		graph.Set.add(tempnode);
+		graph.nodeSet.add(tempnode);
 		return graph;
 	}
 	
@@ -62,7 +55,7 @@ public class MainGraph {
 	}
 	
 	// problem 4
-	public static DirectedGraph createRandomDAGIter(final int n) { //creates a random DAG
+	public static DirectedGraph createRandomDAGIter(final int n) {
 		DirectedGraph DGraph=new DirectedGraph();
 		Random rand=new Random();
 		Node[] colnodes=new Node[n];
@@ -94,15 +87,15 @@ public class MainGraph {
 	}
 	
 	//problem 5
-	public static WeightedGraph createRandomCompleteWeightedGraph(final int n) { //creates randomized weighted graph
+	public static WeightedGraph createRandomCompleteWeightedGraph(final int n) {
 		WeightedGraph wg=new WeightedGraph();
 		Random rand=new Random();
 		for(int i=1;i<=n;i++) { //initializing all nodes into graph
 			wg.addNode(String.valueOf(i));
-			if(wg.Set.size()<1)
+			if(wg.nodeSet.size()<1)
 				continue;
 			Node ognode=wg.findNode(String.valueOf(i));
-			for(Node node:wg.Set) { //connecting most recent node to all previously made nodes except itself
+			for(Node node:wg.nodeSet) { //connecting most recent node to all previously made nodes except itself
 				if(ognode.value.compareTo(node.value)==0)
 					continue;
 				wg.addWeightedEdge(ognode, node, rand.nextInt(10)+1);
@@ -112,18 +105,18 @@ public class MainGraph {
 		return wg;
 	}
 	
-	public static WeightedGraph createWeightedLinkedList(final int n) { //create a weighted graph in the form of a linked list
+	public static WeightedGraph createWeightedLinkedList(final int n) { //create a weighted graph that looks like SLL
 		WeightedGraph wg=new WeightedGraph();
 		Node tempnode=null; //keep track of previous node
 		for(int i=1;i<=n;i++) {
 			Node curnode=new Node(String.valueOf(i));
 			if(tempnode!=null) { //connect previous node to most recent node
 				tempnode.wEdge.put(curnode,1);
-				wg.Set.add(tempnode);
+				wg.nodeSet.add(tempnode);
 			}
 			tempnode=curnode;
 		}
-		wg.Set.add(tempnode);
+		wg.nodeSet.add(tempnode);
 		return wg;
 	}
 	
@@ -166,36 +159,36 @@ public class MainGraph {
 	}
 	
 	//problem 6
-	public static GridGraph createRandomGridGraph(int n) { //create randomized gridgraph
+	public static GridGraph createRandomGridGraph(int n) {
 		GridGraph grid=new GridGraph();
 		for(int row=0;row<=n;row++) { //initialized all nodes into graph
 			for(int col=0;col<=n;col++)
 				grid.addGridNode(row,col,String.valueOf(row)+String.valueOf(col));
 		}
-		for(GridNode node:grid.Set) { //initialized all neighbors for each node
+		for(GridNode node:grid.GridSet) { //initialized all neighbors for each node
 			GridNode neighbor=null;
 			for(int i=0;i<4;i++) {
 				if(i==0)
-					neighbor=grid.findGridNode(node.coord.get(0)+1,node.coord.get(1));
+					neighbor=grid.findGridNode(node.x+1,node.y);
 				else if(i==1)
-					neighbor=grid.findGridNode(node.coord.get(0)-1,node.coord.get(1));
+					neighbor=grid.findGridNode(node.x-1,node.y);
 				else if(i==2)
-					neighbor=grid.findGridNode(node.coord.get(0),node.coord.get(1)+1);
+					neighbor=grid.findGridNode(node.x,node.y+1);
 				else if(i==3)					
-					neighbor=grid.findGridNode(node.coord.get(0),node.coord.get(1)-1);
+					neighbor=grid.findGridNode(node.x,node.y-1);
 				if(neighbor!=null) //check if node exist in graph
 					node.neighbors.put(neighbor,0);
 			}
 		}
 		Random rand=new Random();
-		for(GridNode node:grid.Set) { //create randomized edge to its neighbors for each node
+		for(GridNode node:grid.GridSet) { //create randomized edge to its neighbors for each node
 			Iterator<Entry<GridNode, Integer>> iter=node.neighbors.entrySet().iterator();
 			while(iter.hasNext()) {
 				Map.Entry<GridNode,Integer> pair=(Map.Entry<GridNode, Integer>)iter.next();
 				if(pair.getValue()==1)
 					continue;
 				int fifty=rand.nextInt(2);
-				GridNode findNode=grid.findGridNode(pair.getKey().coord.get(0),pair.getKey().coord.get(1));
+				GridNode findNode=grid.findGridNode(pair.getKey().x,pair.getKey().y);
 				if(fifty==0&&findNode!=null) //50/50 chance to connect
 					grid.addUndirectedEdge(node,findNode);
 			}
@@ -212,7 +205,7 @@ public class MainGraph {
 		map.put(sourceNode,srtar); //store current distance
 		path.put(sourceNode,arlst); //store current path
 		GridNode curNode=sourceNode;
-		while((curNode.coord.get(0)!=destNode.coord.get(0))||(curNode.coord.get(1)!=destNode.coord.get(1))) { //find path from starting node to destination node
+		while((curNode.x!=destNode.x)||(curNode.y!=destNode.y)) { //find path from starting node to destination node
 			curNode.visited=true; //mark current node as visited
 			arlst=(ArrayList<GridNode>)path.get(curNode).clone(); //get path that node took
 			arlst.add(curNode);
@@ -258,8 +251,8 @@ public class MainGraph {
 	}
 	
 	public static int distance(GridNode first,GridNode second) { //finding the distance in terms of adjacent nodes
-		int d1=second.coord.get(0)-first.coord.get(0);
-		int d2=second.coord.get(1)-first.coord.get(1);
+		int d1=second.x-first.x;
+		int d2=second.y-first.y;
 		if(d1<0)
 			d1*=(-1);
 		if(d2<0)
@@ -283,21 +276,22 @@ public class MainGraph {
 		
 		//problem 5
 		WeightedGraph ll=createWeightedLinkedList(1000);
-		for(Node node:ll.Set) { 
+		for(Node node:ll.nodeSet) { 
 			if(node.value.compareTo("1")==0) {
 				dijkstras(node);
 				break;
 			}
 		}
-		
 		//problem 6
 		int n=100;
 		GridGraph grid=createRandomGridGraph(n);
 		GridNode start=grid.findGridNode(0, 0);
 		GridNode end=grid.findGridNode(n, n);
 		ArrayList<GridNode> arlst=astar(start,end);
-		if(arlst!=null)
+		if(arlst!=null) {
 			System.out.println("A path has been found");
+			System.out.println(arlst.size());
+		}
 		else
 			System.out.println("No path has been found");
 	}
