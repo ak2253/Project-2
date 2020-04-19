@@ -2,12 +2,16 @@ import java.util.HashSet;
 
 public class Graph {
 	public HashSet<Node> nodeSet;
+	HashSet<String> strhist=new HashSet<String>();
 	public Graph() {
 		nodeSet=new HashSet<Node>();
 	}
 	public void addNode(final String nodeVal) {
-		Node node=new Node(nodeVal);
-		nodeSet.add(node);
+		if(!strhist.contains(nodeVal)) {
+			Node node=new Node(nodeVal);
+			nodeSet.add(node);
+			strhist.add(nodeVal);
+		}
 	}
 	
 	public void addUndirectedEdge(final Node first, final Node second) { //create edge from node first to node second both ways
